@@ -1,6 +1,6 @@
-#!/usr/in/env python
-# encoding: utf-8
-# Copyright (c) 2009 M. Specht.
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Copyright (c) 2009-2010 Michael Specht.
 # module is distributed under the terms of the GNU General Public License
 
 '''
