@@ -183,16 +183,6 @@ class Protein:
 							continue
 					else:
 						raise TypeError()
-				"""
-				<<<<<<< .mine
-				=======
-								# collect Termini resids 
-								if CurrentAtom.chain not in self.chainTermini.keys():
-									self.chainTermini[CurrentAtom.chain] = [CurrentAtom.resid,CurrentAtom.resid]
-								else:
-									self.chainTermini[self.atoms[-1].chain][1] = self.atoms[-1].resid
-				>>>>>>> .r65
-				"""
 				# --- add to atom-collection list ---
 				self.atoms.append(CurrentAtom)
 				# --- add to atype hash ---
