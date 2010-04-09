@@ -106,9 +106,9 @@ class TransformationMatrix:
 		new_x = (self.a*transformed_Vector.x + self.b*transformed_Vector.y + self.c*transformed_Vector.z) 
 		new_y = (self.d*transformed_Vector.x + self.e*transformed_Vector.y + self.f*transformed_Vector.z) 
 		new_z = (self.g*transformed_Vector.x + self.h*transformed_Vector.y + self.i*transformed_Vector.z)
-		transformed_Vector.x = round(new_x,3)
-		transformed_Vector.y = round(new_y,3)
-		transformed_Vector.z = round(new_z,3)
+		transformed_Vector.x = round(new_x,7)
+		transformed_Vector.y = round(new_y,7)
+		transformed_Vector.z = round(new_z,7)
 		transformed_Vector = transformed_Vector.translateBy(self.target)
 		transformed_Vector.desc += 'Transformed'
 		return transformed_Vector
@@ -179,8 +179,7 @@ def strTr( text, dic ):
 	pat = "(%s)" % "|".join( map(re.escape, dic.keys()) )
 	return re.sub( pat, lambda m:dic[m.group()], text)
 
-
-if __name__ == '__main__':
+def test():
 	from p3d import *
 	a = p3d.vector.Vector(1,0,0)
 	b = p3d.vector.Vector(0,1,0)
@@ -190,4 +189,7 @@ if __name__ == '__main__':
 	print(type(plane))
 	k = p3d.vector.Vector(2,2,2)
 	print('geo.plane: Projecting',k.info(lvl='coordinates'),'onto plane results into',plane.projectionOfVector(k).info(lvl='coordinates'))
+	exit(0)
 	
+if __name__ == '__main__':
+	print('yes!')

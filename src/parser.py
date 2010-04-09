@@ -592,8 +592,7 @@ def strlen_e(items=set(), length=0.0):
 			result.add(item)
 	return result
 
-		
-if __name__ == '__main__':
+def test():
 	repository = dict()
 	
 	repository['letter'] = dict()
@@ -678,3 +677,8 @@ if __name__ == '__main__':
 	print(parser.parse('prime != 3..6,11'))
 	print(parser.parse('prime'))
 	'''
+	exit(0)
+
+		
+if __name__ == '__main__':
+	print('yes!')
