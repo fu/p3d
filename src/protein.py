@@ -233,7 +233,7 @@ class Protein:
 				self.stats['model'] += 1
 				current_model = int(line.split()[1])
 			else:
-				if self.atomInfoIndex == None and line.startswith('CONECT'):
+				if self.atomInfoIndex == None and line.startswith('MASTER'):
 					self.atomInfoIndex = len(self.leftOvers)
 					self.header = self.leftOvers[:self.atomInfoIndex]
 				self.leftOvers.append('{0: <76}\n'.format(line.strip()))
@@ -384,7 +384,7 @@ class Protein:
 			collection |= set(self.BSPTree.query(atom,radius=radius))
 		return collection
 	
-	def writeToFile(self,filename):
+	def writeToFile(self,filename,includeOrgHeader=False):
 		HEADER = [\
 		'HEADER p3d-modified'+self.filename,\
 		'REMARK p3d  V.'+str(version),\
@@ -395,6 +395,9 @@ class Protein:
 		# wrting header
 		for headline in HEADER:
 			dump.write(headline+'\n')
+		if includeOrgHeader == True:
+			for entry in self.header:
+				dump.write(entry)
 		# --*-- NMR Structure ? --*--
 		if self.stats['model'] > 1:
 			current_model = None
