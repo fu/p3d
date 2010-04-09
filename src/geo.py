@@ -180,7 +180,6 @@ def strTr( text, dic ):
 	return re.sub( pat, lambda m:dic[m.group()], text)
 
 def test():
-	from p3d import *
 	a = p3d.vector.Vector(1,0,0)
 	b = p3d.vector.Vector(0,1,0)
 	c = p3d.vector.Vector(1,1,0)
