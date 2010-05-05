@@ -62,9 +62,9 @@ class Parser:
 
     def __init__(self, repository, meta = None):
         if meta == None: meta = {}
-        if meta['aliases'] == None: meta['aliases'] = {}
-        if meta['functions'] == None: meta['functions'] = {}
-        if meta['caseSensitive'] == None: meta['caseSensitive'] = set([])
+        if not 'aliases' in meta: meta['aliases'] = {}
+        if not 'functions' in meta: meta['functions'] = {}
+        if not 'caseSensitive' in meta: meta['caseSensitive'] = set([])
         self.repository = repository
         self.initRepository(meta['aliases'], meta['functions'], meta['caseSensitive'])
         
@@ -626,7 +626,11 @@ def test():
     functions = dict()
     functions['length is {length: float} in {items: set}'] = strlen_e
     
-    parser = Parser(repository, aliases, functions)
+    meta = dict()
+    meta['aliases'] = aliases
+    meta['functions'] = functions
+    parser = Parser(repository, meta)
+    
     queries = [
         'prime is not 5',
         'Prime >= 4',
@@ -681,4 +685,5 @@ def test():
 
         
 if __name__ == '__main__':
-    print('yes!')
+    print('Running test suite...')
+    test()
