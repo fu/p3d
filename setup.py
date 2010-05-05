@@ -10,9 +10,8 @@ setup(name='p3d',
       url='http://p3d.fufezan.net',
       license='GNU General Public License (GPL)',
       platforms='any that supports python 3+',
-      packages=['p3d'],
-      package_dir = {'p3d': 'src'},
-      package_data={'p3d' : ['p3d/COPYING']},
+      package_dir = {'foo': 'lib'},
+
       classifiers=[
 	       'Development Status :: 4 - Beta',
 	       'Environment :: Console',
