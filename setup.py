@@ -3,6 +3,8 @@
 from distutils.core import setup
 setup(name='p3d',
       version='0.4.2',
+      packages = ['p3d'],
+      package_dir = {'p3d': 'src'},
       description='protein structure module',
       long_description='p3d - python module for structural bioinformatics',
       author='Christian Fufezan & Michael Specht',
@@ -10,8 +12,6 @@ setup(name='p3d',
       url='http://p3d.fufezan.net',
       license='GNU General Public License (GPL)',
       platforms='any that supports python 3+',
-      package_dir = {'foo': 'lib'},
-
       classifiers=[
 	       'Development Status :: 4 - Beta',
 	       'Environment :: Console',
