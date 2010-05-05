@@ -28,7 +28,6 @@ This file is part of p3d.
 
 
 import bisect, copy, string
-from collections import defaultdict as ddict
 
 class Parser:
     # atomic tokens are retained during tokenization
@@ -455,7 +454,12 @@ class Parser:
                 
             logicalOperator, localTokens = self.parseLogicalOperator(localTokens)
             if logicalOperator == None:
-                raise Exception("Invalid logical operator: " + localTokens[0] + ".")
+                # raise Exception("Invalid logical operator: " + localTokens[0] + ".")
+                # instead of raising an exception, we just silently assume 'and' here
+                # example: 'oxygen within 2 of backbone' probably means 'oxygen 
+                # AND within 2 of backbone' (we want all atoms that are oxygens 
+                # and within 2 Angstrom of the backbone
+                logicalOperator = 'and'
             terms.append(logicalOperator)
             
         # now figure out operator precedence and combine collected sets
@@ -632,14 +636,16 @@ def test():
     parser = Parser(repository, meta)
     
     queries = [
-        'prime is not 5',
-        'Prime >= 4',
-        'PRIME >= 4',
-        'prime number >= 4',
-        '(length is 1 in prime) or vowel',
-        'length is 1 in vowel or prime',
-        'length is 1 in (prime or vowel)',
-        'prime is 3..4,5,8..16 - digit',
+        'letter and vowel',
+        'letter vowel',
+        #'prime is not 5',
+        #'Prime >= 4',
+        #'PRIME >= 4',
+        #'prime number >= 4',
+        #'(length is 1 in prime) or vowel',
+        #'length is 1 in vowel or prime',
+        #'length is 1 in (prime or vowel)',
+        #'prime is 3..4,5,8..16 - digit',
     ]
     for query in queries:
         #try:
