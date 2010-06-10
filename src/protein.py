@@ -132,20 +132,20 @@ class Protein:
 		We will overwrite any existing structure
 		'''
 		pdbLinePattern = """
-		(?P<type>[A,H][T,E].{4})			# ATOM or HETATOM
-		(?P<index>[0-9, ]{5})				# index number 5 digits
-		(?P<atype>.{5})			# Atom type e.g. CA	
-		(?P<altconf>.)						# altConf on res lvl
-		(?P<aa>[A-Z, ]{3})					# aa identifier
-		([ ]{1})							# -Space-
-		(?P<chain>.{1})						# chain identifier
-		(?P<resid>[0-9, -]{4})				# resid
-		(?P<altconf2>.)						# altconf on chain lvl
-		(?P<x>[0-9, ,\-,\.]{11})			# x coordinates
-		(?P<y>[0-9, ,\-,\.]{8})				# y coordinates
-		(?P<z>[0-9, ,\-,\.]{8})				# z coordinates
-		(?P<user>[0-9, ,\-,\.]{6})			# user field
-		(?P<beta>[0-9, ,\-,\.]{6})			# beta field
+		(?P<type>[A,H][T,E][O,T][M,A].{2})	# ATOM or HETATOM and not HETSYN
+		(?P<index>[0-9, ]{5})					# index number 5 digits
+		(?P<atype>.{5})							# Atom type e.g. CA	
+		(?P<altconf>.)							# altConf on res lvl
+		(?P<aa>[A-Z, ]{3})						# aa identifier
+		([ ]{1})								# -Space-
+		(?P<chain>.{1})							# chain identifier
+		(?P<resid>[0-9, -]{4})					# resid
+		(?P<altconf2>.)							# altconf on chain lvl
+		(?P<x>[0-9, ,\-,\.]{11})				# x coordinates
+		(?P<y>[0-9, ,\-,\.]{8})					# y coordinates
+		(?P<z>[0-9, ,\-,\.]{8})					# z coordinates
+		(?P<user>[0-9, ,\-,\.]{6})				# user field
+		(?P<beta>[0-9, ,\-,\.]{6})				# beta field
 		"""
 		'''
 		NEW and not identified :
