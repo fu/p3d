@@ -136,7 +136,7 @@ class Protein:
 		(?P<index>[0-9, ]{5})					# index number 5 digits
 		(?P<atype>.{5})							# Atom type e.g. CA	
 		(?P<altconf>.)							# altConf on res lvl
-		(?P<aa>[A-Z, ]{3})						# aa identifier
+		(?P<aa>[A-Z,0-9, ]{3})					# aa identifier
 		([ ]{1})								# -Space-
 		(?P<chain>.{1})							# chain identifier
 		(?P<resid>[0-9, -]{4})					# resid
@@ -153,6 +153,7 @@ class Protein:
 		----+----|----+----|----+----|----+----|----+----|----+----|----+----|----+----|
 		ATOM   1390 HO3'  DG F  15       2.055  78.006 -19.523  1.00  0.00           H
 		ATOM      1  O5'  DG C  16      -5.319  62.940 -23.530  1.00 81.62           O
+		HETATM46920  C25 PQ9  5054      31.412 -13.685  -9.050  0.50 52.52           C
 		'''
 		mask = re.compile(pdbLinePattern, re.VERBOSE)
 		

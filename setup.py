@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 setup(name='p3d',
-      version='0.4.2',
+      version='0.4.3',
       packages = ['p3d'],
       package_dir = {'p3d': 'src'},
       description='protein structure module',
