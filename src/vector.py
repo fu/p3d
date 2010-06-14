@@ -133,19 +133,22 @@ class Vector:
 		v.z = self.z/float(value)
 		v.desc = 'idx:'+str(v.desc)+'/'+str(value)
 		return v
-	"""
+
 	def __truediv__(self,value):
 		'''
 		Returns new Vector = self / scalar
 		Vector.desc contains history of operation with index position in protein.atoms
 		'''
+		protein = self.protein
+		self.protein = None
 		v = dcp(self)
+		v.protein = protein
 		v.x = self.x/float(value)
 		v.y = self.y/float(value)
 		v.z = self.z/float(value)
 		v.desc = 'idx:'+str(v.desc)+'/'+str(value)
 		return v
-	"""
+
 	def __abs__(self):
 		'''
 		Returns length of self
