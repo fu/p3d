@@ -190,7 +190,7 @@ class Tree(dict):
 		del self.dimensions
 		return
 	
-	def query(self,Vector_a=vector.Vector(),Vector_b=vector.Vector(),radius=0):
+	def query(self,Vector_a=vector.Vector(),Vector_b=vector.Vector(),radius=0,returnIndices=False):
 		'''
 		Tree.query(Vector a, vector b, radius=(in A))
 		------------
@@ -213,15 +213,18 @@ class Tree(dict):
 		Nestedindcs = self.walk(bbox,indcs)
 		flattend = flattenNested(Nestedindcs)
 		atoms = []
-		for i in list(flattend):
-			if radius != 0:
-				#sphere collection
-				distance = Vector_a.evalDistance(self.protein.atoms[i],radius)
-				if 0 < distance <= radius:
+		if returnIndices == False:
+			for i in list(flattend):
+				if radius != 0:
+					#sphere collection
+					distance = Vector_a.evalDistance(self.protein.atoms[i],radius)
+					if 0 < distance <= radius:
+						atoms.append(self.protein.atoms[i])
+				else:
 					atoms.append(self.protein.atoms[i])
-			else:
-				atoms.append(self.protein.atoms[i])
-		return atoms
+			return atoms
+		else:
+			return flattend
 	
 	def walk(self,bbox,indcs):
 		#print bbox,indcs
