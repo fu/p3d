@@ -83,6 +83,10 @@ class Tree(dict):
 		self.lookup.append((index,atom.x,atom.y,atom.z))
 		# ><><>< can avoid to pass object <><><>
 		return
+
+	def addDummyAtom(self,x,y,z,index):
+		self.lookup.append((index,x,y,z))
+		return
 	
 	def getDimensions(self):
 		for k,dimension in enumerate(['x','y','z']):
