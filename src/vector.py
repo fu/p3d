@@ -48,8 +48,8 @@ class Vector:
 		self.uberID = ' '
 		self.desc = ''
 		self.type = 'p3dVec'
-		self.user = 777.7
-		self.beta = 777.7
+		self.user = 77.7
+		self.beta = 77.7
 		self.protein = None
 		self.pos_in_list = -1
 		self.__bases__ = 'Vector'
