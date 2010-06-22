@@ -44,7 +44,7 @@ class Tree(dict):
 			self.dimensions = {'x':[],'y':[],'z':[]}
 			self.information = {}
 			self.protein = protein
-			self.__version__ = 2.3
+			self.__version__ = 2.4
 			self.lookup = []
 			""" How many atoms on leaf ?"""
 		else:
@@ -272,6 +272,26 @@ class Tree(dict):
 		#exit(1)
 		return indcs
 	
+def generateSurface(ListOfVectors,MinDistance,MaxDistance,GirdPointSpacing):
+	assert type(ListOfVectors[0]) is p3d.vector.Vector, "Cannot generate Surface, require a list of p3d vector(s)"
+	GridDimensions = {}
+	Dimensions= {	'X' : [t.x for t in ListOfVectors],
+					'Y' : [t.y for t in ListOfVectors],
+					'Z' : [t.z for t in ListOfVectors]
+				}
+	for dim,coords in Dimensions.items():
+		GridDimensions[dim] = [round(max(coords) + MaxDistance+1,2), round(min(coords) - MaxDistance - 1,2)]
+
+	allCoords = [(x/10.0,y/10.0,z/10.0) 
+					for x in range(int(GridDimensions['X'][1]*10.0),int(GridDimensions['X'][0]*10.0),int(GirdPointSpacing*10.0)) \
+					for y in range(int(GridDimensions['Y'][1]*10.0),int(GridDimensions['Y'][0]*10.0),int(GirdPointSpacing*10.0))
+					for z in range(int(GridDimensions['Z'][1]*10.0),int(GridDimensions['Z'][0]*10.0),int(GirdPointSpacing*10.0))
+				]
+	
+	SurfaceVectors = []
+	
+	return SurfaceVectors	
+
 def flattenNested(liste):
 	for element in liste:
 		if type(element) in [ tuple, list]:
