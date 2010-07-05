@@ -26,8 +26,10 @@ This file is part of p3d.
 
 import sys, os, time
 from p3d import vector as vector
-import bisect
+import p3d
+#import bisect
 import operator
+from copy import deepcopy as dcp
 
 class Tree(dict):
 	'''
@@ -44,8 +46,9 @@ class Tree(dict):
 			self.dimensions = {'x':[],'y':[],'z':[]}
 			self.information = {}
 			self.protein = protein
-			self.__version__ = 2.4
+			self.__version__ = '2.41a'
 			self.lookup = []
+			self.atoms = []
 			""" How many atoms on leaf ?"""
 		else:
 			## init new branching of old tree
@@ -190,7 +193,8 @@ class Tree(dict):
 		self.kidz[1].lvl = self.lvl + 1
 		del self['bigger']
 		del self['smaller']
-		del self.lookup
+		if self.lvl != 0:
+			del self.lookup
 		del self.dimensions
 		return
 	
@@ -272,25 +276,41 @@ class Tree(dict):
 		#exit(1)
 		return indcs
 	
-def generateSurface(ListOfVectors,MinDistance,MaxDistance,GirdPointSpacing):
-	assert type(ListOfVectors[0]) is p3d.vector.Vector, "Cannot generate Surface, require a list of p3d vector(s)"
-	GridDimensions = {}
-	Dimensions= {	'X' : [t.x for t in ListOfVectors],
-					'Y' : [t.y for t in ListOfVectors],
-					'Z' : [t.z for t in ListOfVectors]
-				}
-	for dim,coords in Dimensions.items():
-		GridDimensions[dim] = [round(max(coords) + MaxDistance+1,2), round(min(coords) - MaxDistance - 1,2)]
+	def generateSurface(self,ListOfVectors,MinDistance,MaxDistance,MinDistanceOfSurfaceVectors):
+		assert isinstance (ListOfVectors[0],p3d.vector.Vector), "Cannot generate Surface, require a list of p3d vector(s) or atoms"
+		GridDimensions = {}
+		
+		SurfaceVectors = []
+		SurfaceOuter = set()
+		SurfaceInner = set()
+		
+		''' Collecting all atoms within Max and Min distance '''
+		for j,atom in enumerate(ListOfVectors):
+			positions = self.query(atom,radius=MaxDistance,returnIndices=True)
+			for pos in positions:
+				index,x,y,z = self.lookup[pos]
+				assert index==pos, 'Position missmatch'
+				d = atom.evalDistanceToCoordinates(x,y,z,MaxDistance)
+				if d:
+					if d >= MinDistance:
+						SurfaceOuter.add((x,y,z))
+					else:
+						SurfaceInner.add((x,y,z))
+		''' Generating Surface with distance between Gripoints at list MinDistanceOfSurfaceVectors '''
+		notInteresting = set()
+		print('REMARK outer {0}, inner {1}, outer-inner {2}'.format(len(SurfaceOuter),len(SurfaceInner),len(SurfaceOuter-SurfaceInner)))
+		for k,(x,y,z) in enumerate(SurfaceOuter-SurfaceInner):
+			t = p3d.vector.Vector(x,y,z)
+			if (x,y,z) not in notInteresting: 	
+				positions = self.query(t,radius=MinDistanceOfSurfaceVectors,returnIndices=True)
+				SurfaceVectors.append(t)
+				for pos in positions:
+					index,x,y,z = self.lookup[pos]
+					if t.evalDistanceToCoordinates(x,y,z,MinDistanceOfSurfaceVectors):
+						notInteresting.add((x,y,z))
+		return SurfaceVectors	
 
-	allCoords = [(x/10.0,y/10.0,z/10.0) 
-					for x in range(int(GridDimensions['X'][1]*10.0),int(GridDimensions['X'][0]*10.0),int(GirdPointSpacing*10.0)) \
-					for y in range(int(GridDimensions['Y'][1]*10.0),int(GridDimensions['Y'][0]*10.0),int(GirdPointSpacing*10.0))
-					for z in range(int(GridDimensions['Z'][1]*10.0),int(GridDimensions['Z'][0]*10.0),int(GirdPointSpacing*10.0))
-				]
-	
-	SurfaceVectors = []
-	
-	return SurfaceVectors	
+""" END OF CLASS """
 
 def flattenNested(liste):
 	for element in liste:

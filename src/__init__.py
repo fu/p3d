@@ -12,7 +12,10 @@ __all__ = ["protein","vector","atom","tree","library","geo"]
 
 # Ensure the user is running the version of python we require.
 import sys
+
 if not hasattr(sys, "version_info") or sys.version_info < (2,6):
     raise RuntimeError("p3d requires Python 3.0 or later.")
 del sys
 
+# Imports
+from p3d import *

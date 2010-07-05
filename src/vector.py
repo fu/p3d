@@ -356,6 +356,29 @@ class Vector:
 						return math.sqrt(xsyszs_diff)
 			return False
 	
+	def evalDistanceToCoordinates(self,x,y,z,distance):
+		'''
+		Evaluates distance from a Vector to a pair of coordinates 
+		It is faster than computing distance at once.
+		Funktion also returns false if vector are not within distance 
+		or returns the computed distance 
+		if evaluated distance is within distance.
+		'''
+		if distance == None:
+			return self.distanceTo(other)
+		else:
+			dsquared = float(distance)**2
+			xs_diff = (self.x-x)**2
+			if xs_diff < dsquared:
+				xsys_diff = xs_diff+(self.y-y)**2
+				if xsys_diff < dsquared:
+					xsyszs_diff = xsys_diff + (self.z-z)**2
+					if xsyszs_diff < dsquared:
+						return math.sqrt(xsyszs_diff)
+			return False
+
+	
+	
 	def output(self,format='pdb'):
 		'''
 		HETATM
