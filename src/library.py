@@ -179,6 +179,15 @@ Library = {
 					'K':'LYS',
 					'R':'ARG'
 },
+'pKa' :{
+					'C':9.1,
+					'Y':10.2,
+					'D':4.75,
+					'E':4.75,
+					'H':6.98,
+					'K':10.8,
+					'R':12.5
+},
 'Hydropathy' :{
 					# Hydropathy Index J.Kyte and R.F.Doolittle (1982) JMB 157, 105-132
 					# Version 1.0 by Ch.Fufezan 2007
