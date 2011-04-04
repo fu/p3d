@@ -76,6 +76,7 @@ class Protein:
             self.leftOvers = []
             self.atomInfoIndex = None
             self.header = []
+            self.headers_infos = ddict(list)
             # --*-- remove path info from pdb filename --*--
             self.fullname = str(pdbfile) if len(pdbfile.split('/')) == 0 else str(pdbfile.split('/')[-1])
             # --*-- head of family flag used for high throuput to distinguish redundant and non-redundant set --*--
@@ -260,11 +261,17 @@ class Protein:
                 if self.atomInfoIndex == None and line.startswith('MASTER'):
                     self.atomInfoIndex = len(self.leftOvers)
                     self.header = self.leftOvers[:self.atomInfoIndex]
+                    temp_list = []
+                    for h in self.header:
+                        header_split = h.split()
+                        temp_list.append((header_split[0].lower(), h[len(header_split[0]):].strip()))
+                    for k, v in temp_list:
+                        self.headers_infos[k].append(v)
                 self.leftOvers.append('{0: <76}\n'.format(line.strip()))
                 if line.startswith('ATOM'):
-                    print('The following atom was missed buy the reg-ex.')
+                    print('The following atom was missed by the reg-ex.')
                     print(line.strip())
-                    print('This branch is for debigging purpose ..., ')
+                    print('This branch is for debugging purpose ..., ')
                     
                     k = """
                     (?P<type>[A,H][T,E].{4})            # ATOM or HETATOM
@@ -302,9 +309,9 @@ class Protein:
                     #if match == None and line.startswith('ATOM'):
                     #   print line
                     if match != None:
-                        print('adapted patter matches line now ...')
+                        print('adapted pattern matches line now ...')
                     else:
-                        print('adapted patter still misses line...')
+                        print('adapted pattern still misses line...')
                     exit(1)
         self.chainTermini[self.atoms[-1].chain].append(self.atoms[-1].resid)
         return
