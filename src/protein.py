@@ -29,7 +29,7 @@ This file is part of p3d.
 """
 
 
-import os, time, re
+import os, time, re, sys
 from collections import defaultdict as ddict
 
 from p3d.__version__ import __version__ as version
@@ -41,27 +41,27 @@ import p3d.parser
 
 
 hash_list = ['chain','atype','resid','resname','non-aa-resname',\
-            'aa-resname','model','bkb','oxygen','altconf',
-            'nitrogen','non-protein','alpha','protein','altConf']
+             'aa-resname','model','bkb','oxygen','altconf',
+             'nitrogen','non-protein','alpha','protein','altConf']
 
 class Protein:
     '''
     p3d.Protein object
-    
+
     usage p3d.protein.Protein(pdbfile,mode='3D',chains=None,MaxAtomsPerLeaf=24)
-    
+
     mode:   3D creates Atom objects with x y z coordinates and initializes a BSP Tree
             2D creates only sequences (not implemented yet)
-    
+
     chains: reads only those peptide chains that are in list 
-                    
+
     MaxAtomsPerLeaf:    How many atoms per leaf on the BSP Tree. Smaller numbers increase
                         inital tree building time but decrease then overall query times.
     '''
     def __init__(self,pdbfile,mode='3D',chains=None,MaxAtomsPerLeaf=96,DunbrackNaming=False,BSPTree=True):
         if not os.path.exists(pdbfile): 
             raise InputError('File does not exist!')
-            exit(1)
+            sys.exit(1)
         else:
             startTime = time.time()
             self.filename = str(pdbfile)
@@ -111,7 +111,7 @@ class Protein:
             self.init_parser()
             self.time = round(time.time()-startTime,3)
         return
-    
+
     def init_hashes(self):
         ''' Hashtables '''
         for hash in hash_list:
@@ -119,7 +119,7 @@ class Protein:
         for AA in p3d.library.Library['AA']:
             self.hash['aa-resname'][AA] = set()
         return
-    
+
     def open_pdb(self,pdbfile):
         if pdbfile.endswith('.gz'):
             import gzip,codecs
@@ -127,7 +127,7 @@ class Protein:
         else:
             liste = open(pdbfile).readlines()
         return liste
-    
+
     def read_in_3Dstructure(self,pdbfile,chains=None):
         '''
         We will overwrite any existing structure
@@ -180,7 +180,7 @@ class Protein:
         ... source : http://www.wwpdb.org/documentation/format32/sect9.html
         """
         mask = re.compile(pdbLinePattern, re.VERBOSE)
-        
+
         liste = self.open_pdb(pdbfile)
         self.stats['model'] = 1
         current_model = 1
@@ -272,7 +272,7 @@ class Protein:
                     print('The following atom was missed by the reg-ex.')
                     print(line.strip())
                     print('This branch is for debugging purpose ..., ')
-                    
+
                     k = """
                     (?P<type>[A,H][T,E].{4})            # ATOM or HETATOM
                     (?P<index>[0-9, ]{5})               # index number 5 digits
@@ -315,30 +315,30 @@ class Protein:
                     exit(1)
         self.chainTermini[self.atoms[-1].chain].append(self.atoms[-1].resid)
         return
-    
+
     def init_parser(self):
         info = {}
-        
+
         info['aliases'] = {
             'backbone': 'bkb',
             'residue id': 'resid',
             'residue name': 'resname',
             'atom type': 'atype',
         }
-        
+
         info['functions'] = {}
         info['functions']['within {radius: float} of {centre: set}'] = self.collectSphereAtoms
         info['functions']['first residue of chain {chain: value of chain}'] = self.firstResidueOfChain
         info['functions']['last residue of chain {chain: value of chain}'] = self.lastResidueOfChain
-        
+
         info['caseSensitive'] = set(['chain'])
-        
+
         self.parser = p3d.parser.Parser(self.hash, info)
         return
-    
+
     def query(self, *args):
         return list(self.parser.parse(*args))
-    
+
     def lookUpAtom(self, *args):
         a = list(self.parser.parse(*args))
         #if len(a) > 1:
@@ -348,8 +348,8 @@ class Protein:
         elif len(a) == 0:
             return False
         return a[0]
-            
-    
+
+
     def info(self):
         '''
         Gives information about the protein, the hash tables and the BSPTree
@@ -374,7 +374,7 @@ class Protein:
         output.append('\n--*-- BSP Tree --*--')
         output += self.BSPTree.info()
         return output
-    
+
     def min_Distance_to_Residue(self, centre=None,ResidueAtom=None):
         '''
         Determines minimum distance from a given atom to a given residue (input is any atom of that residue)
@@ -383,7 +383,7 @@ class Protein:
             raise AtLeastOneVectorIsNeeded()
         residue_atoms = self.hash['resid'][ResidueAtom.resid] & self.hash['chain'][ResidueAtom.chain] & self.hash['aa'][ResidueAtom.aa]
         return self.min_Distance_to_Set(centre,AtomSet=ResidueAtom)
-    
+
     def min_Distance_to_Set(self, centre=None,AtomSet=None):
         '''
         Determines minimum distance from a given atom to a given set of atoms
@@ -397,7 +397,7 @@ class Protein:
             if d < min_distance:
                 min_distance = d
         return min_distance
-    
+
     def distanceBetweenTwoSets(self, setA, setB):
         min_distance = 777
         for atom in setA:
@@ -405,7 +405,7 @@ class Protein:
             if d < min_distance:
                 min_distance = d
         return min_distance
-    
+
     def collectSphereAtoms(self,centre=None,radius=0):
         if centre != None:
             collection = set([])
@@ -414,13 +414,13 @@ class Protein:
         for atom in centre:
             collection |= set(self.BSPTree.query(atom,radius=radius))
         return collection
-    
+
     def writeToFile(self,filename,includeOrgHeader=False):
         HEADER = [\
-        'HEADER p3d-modified'+self.filename,\
-        'REMARK p3d  V.'+str(version),\
-        'REMARK ---*--- please cite Fufezan & Specht 2009 BMC Bioinformatics 10:258 ---*---',\
-        'REMARK'\
+            'HEADER p3d-modified'+self.filename,\
+            'REMARK p3d  V.'+str(version),\
+            'REMARK ---*--- please cite Fufezan & Specht 2009 BMC Bioinformatics 10:258 ---*---',\
+            'REMARK'\
         ]
         dump = open(filename, 'w')
         # wrting header
@@ -442,23 +442,23 @@ class Protein:
         else:
             for atom in self.atoms:
                 dump.write(atom.output()+'\n')
-            
+
         dump.write('END')
         dump.close()
         return
-        
+
     def generatePDBoutput(self):
         HEADER = [\
-        'HEADER p3d-modified'+self.filename,\
-        'REMARK p3d  V.'+str(version),\
-        'REMARK ---*--- please cite Fufezan & Specht 2009 BMC Bioinformatics 10:258 ---*---',\
-        'REMARK'\
+            'HEADER p3d-modified'+self.filename,\
+            'REMARK p3d  V.'+str(version),\
+            'REMARK ---*--- please cite Fufezan & Specht 2009 BMC Bioinformatics 10:258 ---*---',\
+            'REMARK'\
         ]
         HEADER += self.leftOvers[:self.atomInfoIndex]
         for atom in self.atoms:
             HEADER.append('{0: <76}\n'.format(atom.output()))
         return HEADER+self.leftOvers[self.atomInfoIndex:]
-    
+
     def firstResidueOfChain(self,chain,idOnly=False):
         if chain not in self.chainTermini.keys():
             print('>>>>',chain)
@@ -469,7 +469,7 @@ class Protein:
                 return resid
             else:
                 return self.hash['resid'][resid] & self.hash['chain'][chain]
-    
+
     def lastResidueOfChain(self,chain,idOnly=False):
         if chain not in self.chainTermini.keys():
             raise UnknownChain()
@@ -479,7 +479,7 @@ class Protein:
                 return resid
             else:
                 return self.hash['resid'][resid] & self.hash['chain'][chain]
-    
+
 
 class TypeError(Exception): pass
 class InputError(Exception): pass
