@@ -174,7 +174,7 @@ class Parser:
             # don't replace minus (-) if it is followed by a digit (0-9) or a decimal point (.)
             tokenRegex = None
             if token == '-':
-                tokenRegex = '\-[^0-9.]'
+                tokenRegex = '\-[^0-9\.]'
             placeHolder = "`{0}".format(index)
             if tokenRegex:
                 # use a regex for minus sign
