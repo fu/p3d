@@ -27,7 +27,7 @@ This file is part of p3d.
 
 
 
-import bisect, copy, string
+import bisect, copy, string, re
 
 class Parser:
     # atomic tokens are retained during tokenization
@@ -171,8 +171,17 @@ class Parser:
         replacementTable = {}
         # replace each atomic token with `1 plus whitespace etc.
         for index, token in enumerate(self.ATOMIC_TOKENS):
+            # don't replace minus (-) if it is followed by a digit (0-9) or a decimal point (.)
+            tokenRegex = None
+            if token == '-':
+                tokenRegex = '\-[^0-9.]'
             placeHolder = "`{0}".format(index)
-            term = term.replace(token, ' ' + placeHolder + ' ')
+            if tokenRegex:
+                # use a regex for minus sign
+                term = re.sub(tokenRegex, ' ' + placeHolder + ' ', term)
+            else:
+                # use simple search & replace
+                term = term.replace(token, ' ' + placeHolder + ' ')
             replacementTable[placeHolder] = token
         termSplit = term.split()
         
@@ -180,7 +189,7 @@ class Parser:
         for index, token in enumerate(termSplit):
             if token in replacementTable.keys():
                 termSplit[index] = replacementTable[token]
-                
+
         return termSplit
         
     def lowerList(self, inlist):
