@@ -103,7 +103,7 @@ class Atom(p3d.vector.Vector):
         z            = float(line[46:54])
         beta        = float(line[60:66])
         user         = float(line[54:60])
-        
+
         checkas = [\
         (ltype  ,self.type)     , 
         (idx        ,self.idx)   ,
@@ -118,7 +118,7 @@ class Atom(p3d.vector.Vector):
         (z      ,self.z )    ,
         (beta   ,self.beta) ,    
         (user   ,self.user) ,    
-        
+
         ]
         for (a,b) in checkas:
             if a != b:
@@ -134,7 +134,7 @@ class Atom(p3d.vector.Vector):
         #print(line+'\n')
         #print(self.output(format='TestPhase'))
         return
-    
+
     def calcPhiPsi(self,prescision=0,allowAlternativeConfs=True):
         '''
         Returns tuple (phi,psi) in degrees for given residue.
@@ -167,14 +167,14 @@ class Atom(p3d.vector.Vector):
             if (phi,psi) not in phi_psi:
                 phi_psi.append((phi,psi))
         return phi_psi
-    
+
     def isHelical(self,mode='both',allowAlternativeConfs=False):
         '''
         Returns True of False if residue is helical by calling self.calcPhiPsi()
         Helical boundaries are:
             phi = range(-82,42)
             psi = range(-60,21)
-            
+
         Optinal mode='both|phi|psi' to have both or only one dihedral checked 
         '''
         #if self.aa not in p3d.library.AA3:
@@ -198,7 +198,7 @@ class Atom(p3d.vector.Vector):
                 return True
             else:
                 return False
-    
+
     def minDistancetoResidue(atom,ResidueAtom):
         ''' 
         Determines minimum distance from a given atom to a given residue (input is any atom of that residue)
@@ -212,7 +212,7 @@ class Atom(p3d.vector.Vector):
                 min_distance = d
                 closest_atom = res_atom
         return res_atom,min_distance    
-    
+
     def minDistancetoChain(atom,ResidueAtom):
         ''' 
         Determines minimum distance from a given atom to a given chain (input is any atom of that residue)
@@ -227,13 +227,13 @@ class Atom(p3d.vector.Vector):
                     min_distance = d
                     closest_atom = res_atom
         return res_atom,min_distance    
-    
+
     def allAtomsOfSameResidue(self):
-        return self.protein.hash['resid'][self.resid] & self.protein.hash['chain'][self.chain] & (self.protein.hash['aa-resname'][self.aa] | self.protein.hash['non-aa-resname'][self.aa])
-    
+        return self.protein.hash['resid'][self.resid] & self.protein.hash['chain'][self.chain] & self.protein.hash['model'][self.model] & (self.protein.hash['aa-resname'][self.aa] | self.protein.hash['non-aa-resname'][self.aa])
+
     def allAtomsOfSameChain(self):
         return self.protein.hash['chain'][self.chain]
-    
+
 
 if __name__ == '__main__':
     print('yes')
