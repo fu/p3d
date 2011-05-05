@@ -123,7 +123,7 @@ class Protein:
     def open_pdb(self,pdbfile):
         if pdbfile.endswith('.gz'):
             import gzip,codecs
-            liste = codecs.getreader("utf-8")(gzip.open(pdbfile))
+            liste = codecs.getreader("utf-8")(gzip.open(pdbfile)).readlines()
         else:
             liste = open(pdbfile).readlines()
         return liste
