@@ -188,6 +188,13 @@ class Protein:
         for line in liste:
             ''' --*-- STRUCTURE --*-- '''
             match = mask.match(line)
+            
+            if "HETSYN" in line:
+                # I had ValueError from 'self.idx = ...' in Atom.__init__.
+                # Offending lines contained: "HETSYN     NAG NAG"
+                # It works if HETSYN lines are ignored.
+                continue
+            
             #if match == None and line.startswith('ATOM'):
             #   print line
             if match != None:
