@@ -77,6 +77,7 @@ class Protein:
             self.atomInfoIndex = None
             self.header = []
             self.headers_infos = ddict(list)
+            self.conect = []
             # --*-- remove path info from pdb filename --*--
             self.fullname = str(pdbfile) if len(pdbfile.split('/')) == 0 else str(pdbfile.split('/')[-1])
             # --*-- head of family flag used for high throuput to distinguish redundant and non-redundant set --*--
@@ -123,9 +124,16 @@ class Protein:
     def open_pdb(self,pdbfile):
         if pdbfile.endswith('.gz'):
             import gzip,codecs
-            liste = codecs.getreader("utf-8")(gzip.open(pdbfile)).readlines()
+            try:
+                liste = codecs.getreader("utf-8")(gzip.open(pdbfile)).readlines()
+            except IOError:
+                raise IOError('File not found or corrupted')
         else:
-            liste = open(pdbfile).readlines()
+            try:
+                liste = open(pdbfile).readlines()
+            except IOError:
+                raise IOError('File not found or corrupted')
+                
         return liste
 
     def read_in_3Dstructure(self,pdbfile,chains=None):
@@ -267,6 +275,10 @@ class Protein:
                         temp_list.append((header_split[0].lower(), h[len(header_split[0]):].strip()))
                     for k, v in temp_list:
                         self.headers_infos[k].append(v)
+                if line.startswith('CONECT'):
+                    tmp = line.strip()[7:]
+                    tmp = [int(tmp[x:x+5]) for x in xrange(0, len(tmp), 5)]
+                    self.conect.append((tmp))
                 self.leftOvers.append('{0: <76}\n'.format(line.strip()))
                 if line.startswith('ATOM'):
                     print('The following atom was missed by the reg-ex.')
