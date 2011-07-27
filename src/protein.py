@@ -276,7 +276,7 @@ class Protein:
                     for k, v in temp_list:
                         self.headers_infos[k].append(v)
                 if line.startswith('CONECT'):
-                    tmp = line.strip()[7:]
+                    tmp = line.strip()[6:]
                     tmp = [int(tmp[x:x+5]) for x in xrange(0, len(tmp), 5)]
                     self.conect.append((tmp))
                 self.leftOvers.append('{0: <76}\n'.format(line.strip()))
