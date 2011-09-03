@@ -26,15 +26,15 @@ This file is part of p3d.
 """
 
 
-
-import bisect, copy, string, re
+import bisect, copy, re
+from collections import defaultdict as ddict
 
 class Parser:
     # atomic tokens are retained during tokenization
     ATOMIC_TOKENS = sorted([
         '!=', '<>', '..', '||', '&&', '<=', '>=', '==', '=', 
         '<', '>', '!', '&', '|', '^', ',', '(', ')', '{', '}', '-', ':'
-    ], key=lambda x : len(x), reverse = True)
+        ], key=lambda x : len(x), reverse = True)
     
     LOGICAL_OPERATORS = {
         'not': ['not', '!'],
@@ -54,11 +54,11 @@ class Parser:
         'g': [['>']],
         'ge': [['>=']]
     }
-
+    
     VALUE_SEPARATOR = [',']
     
     VALUE_RANGE = ['to', '..']
-
+    
     def __init__(self, repository, meta = None):
         if meta == None: meta = {}
         if not 'aliases' in meta: meta['aliases'] = {}
@@ -67,7 +67,6 @@ class Parser:
         self.repository = repository
         self.initRepository(meta['aliases'], meta['functions'], meta['caseSensitive'])
         
-    
     def initRepository(self, aliases, functions, caseSensitive):
         # convert all repository hash keys
         # to lowercase because if something comes in as ALA, it will never ever
@@ -82,7 +81,7 @@ class Parser:
                     changedSubKey = changedSubKey.lower()
                 repositoryCopy[lowerKey][changedSubKey] = self.repository[key][subKey]
         self.repository = repositoryCopy
-                
+        
         self.repositoryMeta = dict()
         # merge all sets into the global 'all' set
         self.repositoryMeta['globalAll'] = set()
@@ -163,10 +162,9 @@ class Parser:
                 else:
                     description.append(tokens.pop(0).lower())
             self.repositoryMeta['functions'].append({'pattern': description, 'function': functions[pattern]})
-            
             self.repositoryMeta['caseSensitive'] = caseSensitive
         return
-    
+        
     def tokenize(self, term):
         replacementTable = {}
         # replace each atomic token with `1 plus whitespace etc.
@@ -189,7 +187,7 @@ class Parser:
         for index, token in enumerate(termSplit):
             if token in replacementTable.keys():
                 termSplit[index] = replacementTable[token]
-
+                
         return termSplit
         
     def lowerList(self, inlist):
@@ -224,7 +222,7 @@ class Parser:
             localTokens = tokens
         else:
             del localTokens[0:maxAliasLength]
-
+            
         return resultKey, localTokens
     
     def parseLogicalOperator(self, tokens):
@@ -243,7 +241,7 @@ class Parser:
                     # we have found something!
                     localTokens.pop(0)
                     return key, localTokens
-
+                    
         return None, tokens
     
     def parseArithmeticOperator(self, tokens):
@@ -457,7 +455,7 @@ class Parser:
                 break
                 
             terms.append(localSet)
-
+            
             if len(localTokens) == 0:
                 break
                 
@@ -498,10 +496,8 @@ class Parser:
                     terms.insert(i-1, result)
                 else:
                     break
-            
-
+                    
         return terms[0], localTokens
-    
     
     def evaluate(self, key, operator = None, value = None, recursion = False):
         if key == 'all':
@@ -574,7 +570,7 @@ class Parser:
                     result |= self.repository[key][self.repositoryMeta['index'][key][step]]
                     
             return result
-
+    
     def parse(self, *args):
         term = ''
         parameters = []
@@ -597,7 +593,6 @@ class Parser:
         # tokens should be empty now
         return result
     
-        
 def strlen_e(items=set(), length=0.0):
     result = set()
     for item in items:
@@ -607,7 +602,6 @@ def strlen_e(items=set(), length=0.0):
 
 def test():
     repository = dict()
-    
     repository['letter'] = dict()
     repository['letter'][''] = set(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 
                                             'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 
