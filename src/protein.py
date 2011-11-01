@@ -157,7 +157,7 @@ class Protein:
         (?P<beta>[0-9, ,\-,\.]{6})              # beta field
         ([ ]{10})                               # -Space-
         (?P<elementType>[A-Z,0-9, ]{2})         # Element Type
-        (?P<charge>[A-Z,0-9, ]*)                # Charge
+        (?P<charge>[A-Z,0-9,\-,\+, ]*)                # Charge
         """
         '''
         NEW and not identified :
