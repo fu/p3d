@@ -3,7 +3,7 @@
 # Copyright (c) 2009 Ch. Fufezan.
 # module is distributed under the terms of the GNU General Public License
 
-'''p3d - a protein structure module for python 
+'''p3d - a protein structure module for python
 '''
 
 
@@ -56,7 +56,7 @@ class Vector:
         self.elementType = '  '
         self.charge = None
         return
-    
+
     def __add__(self,zeOther):
         '''
         Returns new Vector = a + b
@@ -65,7 +65,7 @@ class Vector:
         tmp = Vector(self.x+zeOther.x,self.y+zeOther.y,self.z+zeOther.z)
         tmp.desc = 'idx:'+str(self.pos_in_list)+'+idx:'+str(zeOther.pos_in_list)
         return tmp
-    
+
     def __sub__(self,zeOther):
         '''
         Returns new Vector = a - b, resulting Vector points towards self, i.e. a
@@ -75,10 +75,10 @@ class Vector:
         tmp.protein = self.protein
         tmp.desc = 'idx:'+str(self.pos_in_list)+'-idx:'+str(zeOther.pos_in_list)
         return tmp
-    
+
     def __mul__(self,value):
         '''
-        Returns new Vector = self * scalar  
+        Returns new Vector = self * scalar
         Vector.desc contains history of operation with index position in protein.atoms
         '''
         protein = self.protein
@@ -90,7 +90,7 @@ class Vector:
         v.z = self.z*float(value)
         v.desc = 'idx:'+str(v.desc)+'*'+str(value)
         return v
-    
+
     def __rmul__(self,value):
         '''
         Returns new Vector = scalar * self
@@ -120,7 +120,7 @@ class Vector:
         v.z = self.z/float(value)
         v.desc = 'idx:'+str(v.desc)+'/'+str(value)
         return v
-    
+
     def __rdiv__(self,value):
         '''
         Returns new Vector = self / scalar
@@ -156,7 +156,7 @@ class Vector:
         Returns length of self
         '''
         return float(math.sqrt(self.x**2 + self.y**2 + self.z**2))
-    
+
     def __neg__(self):
         '''
         Returns new Vector = self * -1
@@ -166,22 +166,22 @@ class Vector:
         v = dcp(self)
         v.protein = protein
         return v*(-1)
-    
+
     def __len__(self):
         '''
         has to be integer in python, thus doesn't make much sense ...'
         return float(math.sqrt(self.x**2 + self.y**2 + self.z**2))
-        
+
         for length use self.length()
         '''
         return
-    
+
     def dot(self,zother):
         '''
         returns dot product of the two vectors
         '''
         return self.x*zother.x + self.y*zother.y + self.z*zother.z
-    
+
     def normalize(self):
         '''
         Return new normalized vector, i.e. length of 1
@@ -191,7 +191,7 @@ class Vector:
         v = dcp(self)
         v.protein = protein
         return v/abs(v)
-    
+
     def translateBy(self,zother):
         '''
         This differs from substraction as it preserves all properties of self
@@ -200,14 +200,14 @@ class Vector:
         self.y = self.y+zother.y
         self.z = self.z+zother.z
         return self
-    
+
     def rotate(self,p1,p2,phi,angleunit='degree'):
         """
         Rotates Vector by angle phi around axis defined by P1 -> P2
         Angle in degrees
         taken from : http://www.mines.edu/~gmurray/ArbitraryAxisRotation/ArbitraryAxisRotation.html
         next implementation could use internal funktions and http://en.wikipedia.org/wiki/Rodrigues'_rotation_formula
-        
+
         !!! NOT FULLY TESTED !!!
         """
         if angleunit == 'degree':
@@ -245,7 +245,7 @@ class Vector:
         Rotates Vector by angle phi around axis defined by P1 -> P2
         Angle in degrees
         taken from http://en.wikipedia.org/wiki/Rodrigues'_rotation_formula
-    
+
         !!! NOT FULLY TESTED !!!
         """
         if angleunit == 'degree':
@@ -263,7 +263,7 @@ class Vector:
         self.y = round(k.y,5)
         self.z = round(k.z,5)
         self.translateBy(p1)
-        return 
+        return
 
     def rotate_aroundX(self,phi,angleunit='degree'):
         if angleunit == 'degree':
@@ -277,7 +277,7 @@ class Vector:
         self.y = new_y
         self.z = new_z
         return self
-    
+
     def rotate_aroundY(self,phi,angleunit='degree'):
         if angleunit == 'degree':
             phiInrad = math.radians(phi)
@@ -290,7 +290,7 @@ class Vector:
         self.x = new_x
         self.z = new_z
         return self
-    
+
     def rotate_aroundZ(self,phi,angleunit='degree'):
         if angleunit == 'degree':
             phiInrad = math.radians(phi)
@@ -303,7 +303,7 @@ class Vector:
         self.x = new_x
         self.y = new_y
         return self
-    
+
     def cross(self,zother):
         '''
         Returns new Vector from cross product between two vectors
@@ -312,37 +312,37 @@ class Vector:
         v = Vector(self.y*zother.z - self.z*zother.y,self.z*zother.x-self.x*zother.z,self.x*zother.y-self.y*zother.x)
         v.desc = 'idx:'+str(self.pos_in_list)+' cross idx:'+str(zother.pos_in_list)
         return v
-    
+
     def length(self):
         '''
         Return length of vector
         '''
         return float(math.sqrt(self.x**2 + self.y**2 + self.z**2))
-    
+
     def distanceTo(self, zeOther):
         '''
         Returns distance between two Vectors
         '''
         return math.sqrt(((self.x-zeOther.x)**2) + ((self.y-zeOther.y)**2) + ((self.z-zeOther.z)**2))
-    
+
     def angleBetween(self,zother):
         '''
         Return angle between two Vectors in RADs
         '''
         # Math domain error ?
         return math.acos(float(self.dot(zother)/(abs(self)*abs(zother))))
-        
+
     def vmdOutput(self,radius=0.2):
         '''
         Returns TK Console command line that can be used to visualise vector self
         '''
         return 'graphics 0 sphere {0} {1} {2} radius {3};'.format(self.x,self.y,self.z,float(radius))
 
-    
+
     def evalDistance(self,other,distance):
         '''
         Evaluates if two vectors are within distance and is faster than computing distance at once.
-        Funktion also returns false if vector are not within distance or returns the computed distance 
+        Funktion also returns false if vector are not within distance or returns the computed distance
         if vectors are within evaluated distance.
         '''
         if distance == None:
@@ -357,13 +357,13 @@ class Vector:
                     if xsyszs_diff < dsquared:
                         return math.sqrt(xsyszs_diff)
             return False
-    
+
     def evalDistanceToCoordinates(self,x,y,z,distance):
         '''
-        Evaluates distance from a Vector to a pair of coordinates 
+        Evaluates distance from a Vector to a pair of coordinates
         It is faster than computing distance at once.
-        Funktion also returns false if vector are not within distance 
-        or returns the computed distance 
+        Funktion also returns false if vector are not within distance
+        or returns the computed distance
         if evaluated distance is within distance.
         '''
         if distance == None:
@@ -379,24 +379,27 @@ class Vector:
                         return math.sqrt(xsyszs_diff)
             return False
 
-    
-    
+
+
     def output(self,format='pdb'):
         '''
         HETATM
-         ATOM    559  CA BASP A  74      48.780  13.254  -1.818  0.50 16.34           C  
+         ATOM    559  CA BASP A  74      48.780  13.254  -1.818  0.50 16.34           C
          ----.----|----.----|----.----|----.----|----.----|----.----|----.----|----.----|----.----
              5    10   15   20   25   30   35   40   45   50   55   60   65   70
         '''
         if format=='pdb':
             altconf = self.altConf if self.altConf != '_' else ' '
-            return "{type: <6}{idx: >5}{atype: <5}{alt1:1}{resname: >3} {chain:1}{resid:>4}{alt2:1}   {x:> 8.3f}{y:> 8.3f}{z:> 8.3f}{user:> 6.2f}{beta:> 6.2f}          {et:2}".format(\
+            # return "{type: <6}{idx: >5}{atype: <5}{alt1:1}{resname: >3} {chain:1}{resid:>4}{alt2:1}   {x:> 8.3f}{y:> 8.3f}{z:> 8.3f}{user:> 6.2f}{beta:> 6.2f}          {et:2}".format(\
+            # type=self.type, idx=self.idx,atype=self.atype,alt1=altconf,alt2=self.altConf2,resname=self.aa,\
+            # chain=self.chain,resid=self.resid,x=self.x,y=self.y,z=self.z,user=self.user,beta=self.beta,et=self.elementType)
+            return "{type: <6}{idx: >5}{atype: <5}{alt1:1}{resname: >3} {chain:1}{resid:>4}{alt2:1}   {x:> 8.3f}{y:> 8.3f}{z:> 8.3f}{user: >6.2f}{beta: >6.2f}{et: >12}".format(\
             type=self.type, idx=self.idx,atype=self.atype,alt1=altconf,alt2=self.altConf2,resname=self.aa,\
             chain=self.chain,resid=self.resid,x=self.x,y=self.y,z=self.z,user=self.user,beta=self.beta,et=self.elementType)
         else:
             raise KeyError()
         return
-    
+
     def upgradeToAtom(self,idx,atype,resname,chain,resid):
         self.type = 'ATOM'
         self.idx = idx
@@ -404,18 +407,18 @@ class Vector:
         self.aa = resname
         self.chain = chain
         self.resid = resid
-        return 
-    
+        return
+
     def info(self,lvl=None):
         '''
         Returns info string about vector/atom
         Default a string is return with atom type amino acid chain and residue id.
-        
+
         key=lvl
             Options:
                 max:         atom type, Amino acid, Chain, Residue id and x,y,z coodinates
                 coordinates: x,y,z coodinates as list
-        
+
         '''
         if lvl=='max':
             return '{atype: >10s}{alt1:1}{aa:3} {chain:1} {resid: >4}{alt2:1} [{x: >8.3f},{y: >8.3f},{z: >8.3f}]'.format(\
@@ -426,7 +429,7 @@ class Vector:
             atype=self.atype,aa=self.aa,chain=self.chain,resid=self.resid)
         else:
             return '[{x: >8.3f},{y: >8.3f},{z: >8.3f}]'.format(x=self.x,y=self.y,z=self.z)
-    
+
     def upgradeToAtom(self,idx,atype,resname,chain,resid):
         self.type = 'ATOM'
         self.idx = idx
@@ -434,9 +437,9 @@ class Vector:
         self.aa = resname
         self.chain = chain
         self.resid = resid
-        return 
-            
-    
+        return
+
+
 
 
 def bp(message=''):
