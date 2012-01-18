@@ -85,8 +85,8 @@ class Atom(p3d.vector.Vector):
         self.x       = float(matchObject.group('x'))
         self.y       = float(matchObject.group('y'))
         self.z       = float(matchObject.group('z'))
-        self.beta    = float(matchObject.group('beta'))
-        self.user    = float(matchObject.group('user'))
+        self.beta    = float(matchObject.group('beta')) if matchObject.group('beta').strip() else 1.0
+        self.user    = float(matchObject.group('user')) if matchObject.group('user').strip() else 0.0
         self.elementType = matchObject.group('elementType')
         self.charge  = matchObject.group('charge')
         """
