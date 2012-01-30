@@ -331,7 +331,7 @@ class Protein:
                         print('adapted pattern matches line now ...')
                     else:
                         print('adapted pattern still misses line...')
-                    exit(1)
+                    sys.exit(1)
         self.chainTermini[self.atoms[-1].chain].append(self.atoms[-1].resid)
         return
 
