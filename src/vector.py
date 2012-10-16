@@ -393,7 +393,7 @@ class Vector:
             # return "{type: <6}{idx: >5}{atype: <5}{alt1:1}{resname: >3} {chain:1}{resid:>4}{alt2:1}   {x:> 8.3f}{y:> 8.3f}{z:> 8.3f}{user:> 6.2f}{beta:> 6.2f}          {et:2}".format(\
             # type=self.type, idx=self.idx,atype=self.atype,alt1=altconf,alt2=self.altConf2,resname=self.aa,\
             # chain=self.chain,resid=self.resid,x=self.x,y=self.y,z=self.z,user=self.user,beta=self.beta,et=self.elementType)
-            return "{type: <6}{idx: >5}{atype: <5}{alt1:1}{resname: >3} {chain:1}{resid:>4}{alt2:1}   {x:> 8.3f}{y:> 8.3f}{z:> 8.3f}{user: >6.2f}{beta: >6.2f}{et: >12}".format(\
+            return "{type: <6}{idx: >5}{atype: <5}{alt1:1}{resname: >3} {chain:1}{resid:>4}{alt2:1}   {x:>8.3f}{y:>8.3f}{z:>8.3f}{user: >6.2f}{beta: >6.2f}{et: >12}".format(\
             type=self.type, idx=self.idx,atype=self.atype,alt1=altconf,alt2=self.altConf2,resname=self.aa,\
             chain=self.chain,resid=self.resid,x=self.x,y=self.y,z=self.z,user=self.user,beta=self.beta,et=self.elementType)
         else:
