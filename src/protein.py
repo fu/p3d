@@ -58,7 +58,7 @@ class Protein:
     MaxAtomsPerLeaf:    How many atoms per leaf on the BSP Tree. Smaller numbers increase
                         inital tree building time but decrease then overall query times.
     '''
-    def __init__(self,pdbfile,mode='3D',chains=None,MaxAtomsPerLeaf=96,DunbrackNaming=False,BSPTree=True):
+    def __init__(self,pdbfile,mode='3D',chains=None,residues=None,models=None,MaxAtomsPerLeaf=96,DunbrackNaming=False,BSPTree=True):
         if not os.path.exists(pdbfile): 
             raise InputError('File does not exist!')
             sys.exit(1)
@@ -101,7 +101,7 @@ class Protein:
                 self.dunbrackChain = None
             if mode == '3D':
                 self.BSPTree = p3d.tree.Tree(protein=self)
-                self.read_in_3Dstructure(pdbfile,chains=chains)
+                self.read_in_3Dstructure(pdbfile,chains=chains,residues=residues,models=models)
                 if BSPTree:
                     self.BSPTree.build(MaxAtomsPerLeaf=MaxAtomsPerLeaf)
             elif mode == '2D':
@@ -136,7 +136,7 @@ class Protein:
                 
         return liste
 
-    def read_in_3Dstructure(self,pdbfile,chains=None):
+    def read_in_3Dstructure(self,pdbfile,chains=None,residues=None,models=None):
         '''
         We will overwrite any existing structure
         '''
@@ -223,6 +223,18 @@ class Protein:
                             continue
                     else:
                         raise TypeError()
+                if residues != None:
+                    if type(residues) in [tuple,list]:
+                        if CurrentAtom.resid not in residues:
+                            continue
+                    else:
+                        raise TypeError()
+                if models != None:
+                    if type(models) in [tuple,list]:
+                        if CurrentAtom.model not in models:
+                            continue
+                    else:
+                        raise TypeError()
                 # --- add to atom-collection list ---
                 self.atoms.append(CurrentAtom)
                 # --- add to atype hash ---
@@ -284,7 +296,7 @@ class Protein:
                         self.headers_infos[k].append(v)
                 if line.startswith('CONECT'):
                     tmp = line.strip()[6:]
-                    tmp = [int(tmp[x:x+5]) for x in xrange(0, len(tmp), 5)]
+                    tmp = [int(tmp[x:x+5]) for x in range(0, len(tmp), 5)]
                     self.conect.append((tmp))
                 self.leftOvers.append('{0: <76}\n'.format(line.strip()))
                 if line.startswith('ATOM'):
